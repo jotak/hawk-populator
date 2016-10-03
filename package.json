@@ -1,0 +1,11 @@
+{
+    "name"         : "hawk-populator",
+    "version"      : "0.1.0",
+    "description"  : "Hawkular populator",
+    "author"       : "Joël Takvorian <joel.takvorian@qaraywa.net> (https://github.com/jotak)",
+    "main"         : "populate.js",
+    "engines"      : {
+        "node"       : ">=0.10.0"
+    },
+    "license"      : "Apache-2.0"
+}
