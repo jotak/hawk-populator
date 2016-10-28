@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import http = require('http');
+import http = require('https');
 
 "use strict";
 
 // WARNING: JS month is minus-1
 let start: Date = new Date(2016, 8, 1, 8, 0);
-let end: Date = new Date(2016, 9, 31, 23, 0);
-let intermediate = new Date(2016, 9, 1, 13, 0);
+let end: Date = new Date(2016, 11, 31, 23, 0);
+let intermediate = new Date(2016, 9, 10, 13, 0);
 // Every hour: 60*60*1000
 let increment: number = 60*60*1000;
 let timestampVariation: number = 5000;
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 enum MetricType {
   gauge,
@@ -86,12 +88,13 @@ function postToHawkular(metricId: string, type: string, dataPoints: any) {
   var body = '';
   let req = http.request({
     method: 'POST',
-    host: '127.0.0.1',
+    host: 'metrics.192.168.42.63.xip.io',
     path: '/hawkular/metrics/' + type + '/' + encodeURIComponent(metricId) + '/raw',
-    port: 8080,
+    port: 443,
     headers: {
       'Content-Type': 'application/json',
-      'Hawkular-Tenant': 'dev'
+      'Hawkular-Tenant': 'test',
+      'Authorization': 'Bearer Exvx6p1aLITd3ZJVVvRtCTAzof4ANC1UT-dd-GreYiA'
     }
   }, response => {
     response.on('data', function (chunk) {
@@ -144,12 +147,13 @@ function tag(type: string, metricId: string, app: string, container: string, cou
   var body = '';
   let req = http.request({
     method: 'PUT',
-    host: '127.0.0.1',
+    host: 'metrics.192.168.42.63.xip.io',
     path: '/hawkular/metrics/' + type + '/' + encodeURIComponent(metricId) + '/tags',
-    port: 8080,
+    port: 443,
     headers: {
       'Content-Type': 'application/json',
-      'Hawkular-Tenant': 'dev'
+      'Hawkular-Tenant': 'test',
+      'Authorization': 'Bearer Exvx6p1aLITd3ZJVVvRtCTAzof4ANC1UT-dd-GreYiA'
     }
   }, response => {
     response.on('data', function (chunk) {

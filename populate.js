@@ -1,11 +1,12 @@
 "use strict";
-var http = require('http');
+var http = require('https');
 "use strict";
 var start = new Date(2016, 8, 1, 8, 0);
-var end = new Date(2016, 9, 31, 23, 0);
-var intermediate = new Date(2016, 9, 1, 13, 0);
+var end = new Date(2016, 11, 31, 23, 0);
+var intermediate = new Date(2016, 9, 10, 13, 0);
 var increment = 60 * 60 * 1000;
 var timestampVariation = 5000;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 var MetricType;
 (function (MetricType) {
     MetricType[MetricType["gauge"] = 0] = "gauge";
@@ -65,12 +66,13 @@ function postToHawkular(metricId, type, dataPoints) {
     var body = '';
     var req = http.request({
         method: 'POST',
-        host: '127.0.0.1',
+        host: 'metrics.192.168.42.63.xip.io',
         path: '/hawkular/metrics/' + type + '/' + encodeURIComponent(metricId) + '/raw',
-        port: 8080,
+        port: 443,
         headers: {
             'Content-Type': 'application/json',
-            'Hawkular-Tenant': 'dev'
+            'Hawkular-Tenant': 'test',
+            'Authorization': 'Bearer Exvx6p1aLITd3ZJVVvRtCTAzof4ANC1UT-dd-GreYiA'
         }
     }, function (response) {
         response.on('data', function (chunk) {
@@ -120,12 +122,13 @@ function tag(type, metricId, app, container, counter) {
     var body = '';
     var req = http.request({
         method: 'PUT',
-        host: '127.0.0.1',
+        host: 'metrics.192.168.42.63.xip.io',
         path: '/hawkular/metrics/' + type + '/' + encodeURIComponent(metricId) + '/tags',
-        port: 8080,
+        port: 443,
         headers: {
             'Content-Type': 'application/json',
-            'Hawkular-Tenant': 'dev'
+            'Hawkular-Tenant': 'test',
+            'Authorization': 'Bearer Exvx6p1aLITd3ZJVVvRtCTAzof4ANC1UT-dd-GreYiA'
         }
     }, function (response) {
         response.on('data', function (chunk) {
