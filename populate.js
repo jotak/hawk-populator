@@ -1,9 +1,15 @@
 "use strict";
-var http = require('http');
-"use strict";
-var start = new Date(2016, 8, 1, 8, 0);
-var end = new Date(2016, 9, 31, 23, 0);
-var intermediate = new Date(2016, 9, 1, 13, 0);
+Object.defineProperty(exports, "__esModule", { value: true });
+var http = require("http");
+var HOSTNAME = '127.0.0.1';
+var PORT = 8080;
+var HEADERS = {
+    'Content-Type': 'application/json',
+    'Hawkular-Tenant': 'test'
+};
+var start = new Date(2017, 6, 10, 8, 0);
+var intermediate = new Date(2017, 6, 15, 13, 0);
+var end = new Date(2017, 6, 20, 23, 0);
 var increment = 60 * 60 * 1000;
 var timestampVariation = 5000;
 var MetricType;
@@ -22,13 +28,13 @@ function run() {
     tag("availability", "aloha/789-654-321/avail", "aloha", "789-654-321", "avail");
     tag("availability", "hola/654-987-321/avail", "hola", "654-987-321", "avail");
     populateMetric("aloha/123-456-789/memory/usage", MetricType.gauge, 200000000, 600000000, 0.8);
-    populateMetric("aloha/789-654-321/memory/usage", MetricType.gauge, 200000000, 600000000, 0.8, new Date(2016, 8, 4, 13, 0));
+    populateMetric("aloha/789-654-321/memory/usage", MetricType.gauge, 200000000, 600000000, 0.8, intermediate);
     populateMetric("hola/654-987-321/memory/usage", MetricType.gauge, 200000000, 600000000, 0.8);
     populateMetric("aloha/123-456-789/cpu/usage", MetricType.counter, 0, 100, 0.3);
-    populateMetric("aloha/789-654-321/cpu/usage", MetricType.counter, 0, 100, 0.3, new Date(2016, 8, 4, 13, 0));
+    populateMetric("aloha/789-654-321/cpu/usage", MetricType.counter, 0, 100, 0.3, intermediate);
     populateMetric("hola/654-987-321/cpu/usage", MetricType.counter, 0, 100, 0.3);
     populateAvailability("aloha/123-456-789/avail", 0.3);
-    populateAvailability("aloha/789-654-321/avail", 0.3, new Date(2016, 8, 4, 13, 0));
+    populateAvailability("aloha/789-654-321/avail", 0.3, intermediate);
     populateAvailability("hola/654-987-321/avail", 0.3);
 }
 function vary(timestamp) {
@@ -65,13 +71,10 @@ function postToHawkular(metricId, type, dataPoints) {
     var body = '';
     var req = http.request({
         method: 'POST',
-        host: '127.0.0.1',
+        host: HOSTNAME,
         path: '/hawkular/metrics/' + type + '/' + encodeURIComponent(metricId) + '/raw',
-        port: 8080,
-        headers: {
-            'Content-Type': 'application/json',
-            'Hawkular-Tenant': 'dev'
-        }
+        port: PORT,
+        headers: HEADERS
     }, function (response) {
         response.on('data', function (chunk) {
             body += chunk;
@@ -120,13 +123,10 @@ function tag(type, metricId, app, container, counter) {
     var body = '';
     var req = http.request({
         method: 'PUT',
-        host: '127.0.0.1',
+        host: HOSTNAME,
         path: '/hawkular/metrics/' + type + '/' + encodeURIComponent(metricId) + '/tags',
-        port: 8080,
-        headers: {
-            'Content-Type': 'application/json',
-            'Hawkular-Tenant': 'dev'
-        }
+        port: PORT,
+        headers: HEADERS
     }, function (response) {
         response.on('data', function (chunk) {
             body += chunk;
@@ -136,9 +136,9 @@ function tag(type, metricId, app, container, counter) {
         });
     });
     req.write(JSON.stringify({
-        app: app,
-        container: container,
-        counter: counter
+        container_name: app,
+        pod_id: container,
+        descriptor_name: counter
     }));
     req.end();
 }
