@@ -20,16 +20,20 @@ const HOSTNAME = '127.0.0.1';
 const PORT = 8080;
 const HEADERS = {
   'Content-Type': 'application/json',
-//  'Authorization': 'Basic ' + new Buffer('myUsername:myPassword').toString('base64'),
+  'Authorization': 'Basic ' + new Buffer('jdoe:password').toString('base64'),
   'Hawkular-Tenant': 'test'
 };
 
 // WARNING: JS month is minus-1
-const start: Date = new Date(2017, 6, 10, 8, 0);
-const intermediate = new Date(2017, 6, 15, 13, 0);
-const end: Date = new Date(2017, 6, 20, 23, 0);
+// const start: Date = new Date(2017, 6, 10, 8, 0);
+// const intermediate = new Date(2017, 6, 15, 13, 0);
+// const end: Date = new Date(2017, 7, 30, 23, 0);
+const now = new Date().getTime();
+const start = new Date(now - 1000*60*60*24*30);
+const intermediate = new Date(now - 1000*60*60*24*4);
+const end = new Date(now + 1000*60*60*24*5);
 // Every hour: 60*60*1000
-let increment: number = 60*60*1000;
+let increment: number = 30*60*1000;
 let timestampVariation: number = 5000;
 
 enum MetricType {

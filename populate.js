@@ -5,12 +5,14 @@ var HOSTNAME = '127.0.0.1';
 var PORT = 8080;
 var HEADERS = {
     'Content-Type': 'application/json',
+    'Authorization': 'Basic ' + new Buffer('jdoe:password').toString('base64'),
     'Hawkular-Tenant': 'test'
 };
-var start = new Date(2017, 6, 10, 8, 0);
-var intermediate = new Date(2017, 6, 15, 13, 0);
-var end = new Date(2017, 6, 20, 23, 0);
-var increment = 60 * 60 * 1000;
+var now = new Date().getTime();
+var start = new Date(now - 1000 * 60 * 60 * 24 * 30);
+var intermediate = new Date(now - 1000 * 60 * 60 * 24 * 4);
+var end = new Date(now + 1000 * 60 * 60 * 24 * 5);
+var increment = 30 * 60 * 1000;
 var timestampVariation = 5000;
 var MetricType;
 (function (MetricType) {
