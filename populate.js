@@ -20,24 +20,24 @@ var MetricType;
     MetricType[MetricType["counter"] = 1] = "counter";
 })(MetricType || (MetricType = {}));
 function run() {
-    tag("gauges", "aloha/123-456-789/memory/usage", "aloha", "123-456-789", "memory");
-    tag("gauges", "aloha/789-654-321/memory/usage", "aloha", "789-654-321", "memory");
-    tag("gauges", "hola/654-987-321/memory/usage", "hola", "654-987-321", "memory");
-    tag("counters", "aloha/123-456-789/cpu/usage", "aloha", "123-456-789", "cpu");
-    tag("counters", "aloha/789-654-321/cpu/usage", "aloha", "789-654-321", "cpu");
-    tag("counters", "hola/654-987-321/cpu/usage", "hola", "654-987-321", "cpu");
-    tag("availability", "aloha/123-456-789/avail", "aloha", "123-456-789", "avail");
-    tag("availability", "aloha/789-654-321/avail", "aloha", "789-654-321", "avail");
-    tag("availability", "hola/654-987-321/avail", "hola", "654-987-321", "avail");
-    populateMetric("aloha/123-456-789/memory/usage", MetricType.gauge, 200000000, 600000000, 0.8);
-    populateMetric("aloha/789-654-321/memory/usage", MetricType.gauge, 200000000, 600000000, 0.8, intermediate);
-    populateMetric("hola/654-987-321/memory/usage", MetricType.gauge, 200000000, 600000000, 0.8);
-    populateMetric("aloha/123-456-789/cpu/usage", MetricType.counter, 0, 100, 0.3);
-    populateMetric("aloha/789-654-321/cpu/usage", MetricType.counter, 0, 100, 0.3, intermediate);
-    populateMetric("hola/654-987-321/cpu/usage", MetricType.counter, 0, 100, 0.3);
-    populateAvailability("aloha/123-456-789/avail", 0.3);
-    populateAvailability("aloha/789-654-321/avail", 0.3, intermediate);
-    populateAvailability("hola/654-987-321/avail", 0.3);
+    var m1 = tag("gauges", "aloha/123-456-789/memory/usage{namespace=test,pod=123-456-789,server=10.1.10.138:8080,service=aloha}", "aloha", "123-456-789", "memory");
+    var m2 = tag("gauges", "aloha/789-654-321/memory/usage{namespace=test,pod=789-654-321,server=10.1.10.138:8080,service=aloha}", "aloha", "789-654-321", "memory");
+    var m3 = tag("gauges", "hola/654-987-321/memory/usage{namespace=test,pod=654-987-321,server=10.1.10.138:8080,service=hola}", "hola", "654-987-321", "memory");
+    var m4 = tag("counters", "aloha/123-456-789/cpu/usage{namespace=test,pod=123-456-789,server=10.1.10.138:8080,service=aloha}", "aloha", "123-456-789", "cpu");
+    var m5 = tag("counters", "aloha/789-654-321/cpu/usage{namespace=test,pod=789-654-321,server=10.1.10.138:8080,service=aloha}", "aloha", "789-654-321", "cpu");
+    var m6 = tag("counters", "hola/654-987-321/cpu/usage{namespace=test,pod=654-987-321,server=10.1.10.138:8080,service=hola}", "hola", "654-987-321", "cpu");
+    var m7 = tag("availability", "aloha/123-456-789/avail{namespace=test,pod=123-456-789,server=10.1.10.138:8080,service=aloha}", "aloha", "123-456-789", "avail");
+    var m8 = tag("availability", "aloha/789-654-321/avail{namespace=test,pod=789-654-321,server=10.1.10.138:8080,service=aloha}", "aloha", "789-654-321", "avail");
+    var m9 = tag("availability", "hola/654-987-321/avail{namespace=test,pod=654-987-321,server=10.1.10.138:8080,service=hola}", "hola", "654-987-321", "avail");
+    populateMetric(m1, MetricType.gauge, 200000000, 600000000, 0.8);
+    populateMetric(m2, MetricType.gauge, 200000000, 600000000, 0.8, intermediate);
+    populateMetric(m3, MetricType.gauge, 200000000, 600000000, 0.8);
+    populateMetric(m4, MetricType.counter, 0, 100, 0.3);
+    populateMetric(m5, MetricType.counter, 0, 100, 0.3, intermediate);
+    populateMetric(m6, MetricType.counter, 0, 100, 0.3);
+    populateAvailability(m7, 0.3);
+    populateAvailability(m8, 0.3, intermediate);
+    populateAvailability(m9, 0.3);
 }
 function vary(timestamp) {
     var variation = Math.floor(Math.random() * timestampVariation - (timestampVariation / 2));
@@ -143,5 +143,6 @@ function tag(type, metricId, app, container, counter) {
         descriptor_name: counter
     }));
     req.end();
+    return metricId;
 }
 run();
